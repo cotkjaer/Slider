@@ -13,7 +13,7 @@ class ViewController: UIViewController
 {
     @IBOutlet weak var horizontalSlider: RoundedSlider? {didSet { horizontalSlider?.delegate = self } }
     
-    @IBOutlet weak var verticalSlider: RoundedSlider? {didSet { verticalSlider?.orientation = .bottomToTop; verticalSlider?.delegate = self } }
+    @IBOutlet weak var verticalSlider: RoundedSlider? {didSet { verticalSlider?.delegate = self } }
 }
 
 
