@@ -21,8 +21,4 @@ public protocol Slider
     
     /// The progress from min to max represented by a value in the [0;1] range
     var progress: Float { set get }
-    
-//    var thumbView: UIView { get }
-//    var trackView: UIView { get }
-//    var barView: UIView { get }
 }

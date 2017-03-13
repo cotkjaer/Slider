@@ -22,6 +22,8 @@
 		8F56A99F1E76E42000B1F37C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F56A99D1E76E42000B1F37C /* LaunchScreen.storyboard */; };
 		8F56A9A41E76E43C00B1F37C /* Slider.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F368BC61E3B3099002D881C /* Slider.framework */; };
 		8F56A9A51E76E43C00B1F37C /* Slider.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8F368BC61E3B3099002D881C /* Slider.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8F56A9B21E773A7500B1F37C /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F56A9B11E773A7500B1F37C /* CGRect.swift */; };
+		8F56A9B41E773CF100B1F37C /* SliderOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F56A9B31E773CF100B1F37C /* SliderOrientation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +76,8 @@
 		8F56A99B1E76E42000B1F37C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F56A99E1E76E42000B1F37C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F56A9A01E76E42000B1F37C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F56A9B11E773A7500B1F37C /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
+		8F56A9B31E773CF100B1F37C /* SliderOrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderOrientation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,9 +135,11 @@
 				8F368BCA1E3B3099002D881C /* Info.plist */,
 				8F56A98A1E76D92B00B1F37C /* SliderAnimator.swift */,
 				8F56A9881E76D8FA00B1F37C /* SliderDelegate.swift */,
+				8F56A9B31E773CF100B1F37C /* SliderOrientation.swift */,
 				8F56A9861E76D82A00B1F37C /* Slider.swift */,
 				8F368BE01E3B30DD002D881C /* RoundedSlider.swift */,
 				8F56A98C1E76DB0400B1F37C /* UIView.swift */,
+				8F56A9B11E773A7500B1F37C /* CGRect.swift */,
 			);
 			path = Slider;
 			sourceTree = "<group>";
@@ -317,10 +323,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F56A98D1E76DB0400B1F37C /* UIView.swift in Sources */,
+				8F56A9B41E773CF100B1F37C /* SliderOrientation.swift in Sources */,
 				8F56A9871E76D82A00B1F37C /* Slider.swift in Sources */,
 				8F56A98B1E76D92B00B1F37C /* SliderAnimator.swift in Sources */,
 				8F368BE11E3B30DD002D881C /* RoundedSlider.swift in Sources */,
 				8F56A9891E76D8FA00B1F37C /* SliderDelegate.swift in Sources */,
+				8F56A9B21E773A7500B1F37C /* CGRect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -623,6 +631,7 @@
 				8F56A9A31E76E42000B1F37C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

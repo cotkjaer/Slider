@@ -10,6 +10,10 @@ import Foundation
 
 public class SliderAnimator
 {
+    public static var DefaultSliderAnimationDuration: Double = 0.25
+    public static var DefaultSliderSnapAnimationDuration: Double = 0.25
+    public static var DefaultSliderTrackAnimationDuration: Double = 0.1
+    
     public let fromValue: Float
     public let toValue: Float
 

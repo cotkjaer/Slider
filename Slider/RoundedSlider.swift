@@ -8,24 +8,6 @@
 
 import UIKit
 
-class BarView: UIView
-{
-    override var backgroundColor: UIColor?
-        {
-        get { return super.backgroundColor ?? tintColor }
-        set { super.backgroundColor = newValue }
-    }
-}
-
-class TrackView: UIView
-{
-    override var backgroundColor: UIColor?
-        {
-        get { return super.backgroundColor ?? tintColor.withAlphaComponent(0.1) }
-        set { super.backgroundColor = newValue }
-    }
-}
-
 @IBDesignable
 open class RoundedSlider: UIView, Slider
 {
@@ -88,10 +70,15 @@ open class RoundedSlider: UIView, Slider
     
     // MARK: - Views
     
+    // MARK: Track
     
-    // MARK: - Track
+    public let trackView = UIView()
     
-    public let trackView: UIView = TrackView()
+    @IBInspectable
+    open var trackInsets: UIEdgeInsets = UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
+        {
+        didSet { setNeedsLayout() }
+    }
     
     @IBInspectable
     open var trackColor: UIColor?
@@ -100,9 +87,16 @@ open class RoundedSlider: UIView, Slider
         set { trackView.backgroundColor = newValue }
     }
 
-    // MARK: - Bar
+    // MARK: Bar
     
-    public let barView: UIView = BarView()
+    public let barView = UIView()
+    
+    @IBInspectable
+    open var barInsets: UIEdgeInsets = UIEdgeInsets(top: 1, left: 1, bottom: 1, right: 1)
+        {
+        didSet { setNeedsLayout() }
+    }
+
     
     @IBInspectable
     open var barColor: UIColor?
@@ -111,13 +105,19 @@ open class RoundedSlider: UIView, Slider
         set { barView.backgroundColor = newValue }
     }
     
-    // MARK: - Thumb
+    // MARK: Thumb
     
-    public let thumbView = UIView(frame: .zero)
+    public let thumbView = UIView()
     
-    // MARK: - Text
+    @IBInspectable
+    open var thumbInsets: UIEdgeInsets = UIEdgeInsets()//top: 1, left: 1, bottom: 1, right: 1)
+    {
+        didSet { setNeedsLayout() }
+    }
     
-    private let thumbLabel = UILabel(frame: .zero)
+    // MARK: Text
+    
+    private let thumbLabel = UILabel()
     
     @IBInspectable
     open var thumbText: String?
@@ -140,7 +140,7 @@ open class RoundedSlider: UIView, Slider
             set { thumbLabel.textColor = newValue }
     }
     
-    // MARK: - Image
+    // MARK: Image
 
     private let thumbImageView = UIImageView(image: nil)
 
@@ -173,7 +173,6 @@ open class RoundedSlider: UIView, Slider
     
     func initialSetup()
     {
-        
         layoutSubviews()
         
         addSubview(trackView)
@@ -190,6 +189,31 @@ open class RoundedSlider: UIView, Slider
     }
     
     // MARK: - Layout
+    
+    open var orientation: SliderOrientation = .automatic
+    
+    private var currentOrientation: SliderOrientation
+    {
+        switch orientation
+        {
+        case .automatic:
+            
+            if bounds.width > bounds.height
+            {
+                // TODO: reading direction
+                
+                return .leftToRight
+            }
+            else
+            {
+                return .bottomToTop
+            }
+            
+            
+        default:
+            return orientation
+        }
+    }
     
     open override func layoutSubviews()
     {
@@ -223,19 +247,49 @@ open class RoundedSlider: UIView, Slider
     {
         let bounds = bounds ?? self.bounds
         
-        return bounds
+        return trackInsets.apply(to: bounds)
     }
     
     func barFrame(forBounds bounds: CGRect? = nil, trackRect: CGRect? = nil, value: Float? = nil) -> CGRect
     {
         let bounds = bounds ?? self.bounds
-        let trackRect = trackRect ?? trackFrame(forBounds: bounds)
+        let trackRect = barInsets.apply(to: trackRect ?? trackFrame(forBounds: bounds))
         let value = value ?? self.value
         
-        let height = trackRect.height
-        let width = (trackRect.width - height) * CGFloat(factor(value: value))
+        let barFrame: CGRect
+        switch currentOrientation
+        {
+        case .automatic:
+           fallthrough
         
-        return CGRect(x: trackRect.minX, y: trackRect.minY, width: height + width, height: height)
+        case .leftToRight:
+            let height = trackRect.height
+            let width = (trackRect.width - height) * CGFloat(factor(value: value))
+
+            barFrame = CGRect(x: trackRect.minX, y: trackRect.minY, width: height + width, height: height)
+            
+        case .rightToLeft:
+            let height = trackRect.height
+            let width = (trackRect.width - height) * CGFloat(factor(value: value))
+            
+            return CGRect(x: trackRect.maxX - (height + width), y: trackRect.minY, width: height + width, height: height)
+
+        case .bottomToTop:
+            
+            let width = trackRect.width
+            let height = (trackRect.height - width) * CGFloat(factor(value: value))
+            
+            barFrame = CGRect(x: trackRect.minX, y: trackRect.maxY - (height + width), width: width, height: height + width)
+            
+        case .topToBottom:
+            
+            let width = trackRect.width
+            let height = (trackRect.height - width) * CGFloat(factor(value: value))
+            
+            barFrame = CGRect(x: trackRect.minX, y: trackRect.minY, width: width, height: height + width)
+        }
+        
+        return barFrame
     }
     
     func thumbFrame(forBounds bounds: CGRect? = nil, trackRect: CGRect? = nil, barRect: CGRect? = nil, value: Float? = nil) -> CGRect
@@ -243,18 +297,42 @@ open class RoundedSlider: UIView, Slider
         let bounds = bounds ?? self.bounds
         let trackRect = trackRect ?? trackFrame(forBounds: bounds)
         let value = value ?? self.value
-        let barRect = barRect ?? barFrame(forBounds: bounds, trackRect: trackRect, value: value)
+        let barRect = thumbInsets.apply(to: barRect ?? barFrame(forBounds: bounds, trackRect: trackRect, value: value))
         
-        let r = barRect.insetBy(dx: 2, dy: 2)
+        let thumbFrame: CGRect
         
-        return CGRect(x: r.maxX - r.height, y: r.minY, width: r.height, height: r.height)
+        switch currentOrientation
+        {
+        case .automatic:
+            fallthrough
+            
+        case .leftToRight:
+            
+            thumbFrame = CGRect(x: barRect.maxX - barRect.height, y: barRect.minY, width: barRect.height, height: barRect.height)
+            
+        case .rightToLeft:
+
+            thumbFrame = CGRect(x: barRect.minX, y: barRect.minY, width: barRect.height, height: barRect.height)
+            
+        case .bottomToTop:
+            
+            thumbFrame = CGRect(x: barRect.minX, y: barRect.minY, width: barRect.width, height: barRect.width)
+
+            
+        case .topToBottom:
+            
+            thumbFrame = CGRect(x: barRect.minX, y: barRect.maxY - barRect.width, width: barRect.width, height: barRect.width)
+        }
+        
+        return thumbFrame
+        
     }
     
     // MARK: - Slide Animation
     
-    func animateSlide(to: Float, completion: ((Bool)->())? = nil)
+    func animateSlide(to: Float, duration: Double = SliderAnimator.DefaultSliderAnimationDuration, completion: ((Bool)->())? = nil)
     {
-        let animator = SliderAnimator(fromValue: value, toValue: to, duration: 0.1, animation: {
+        let animator = SliderAnimator(fromValue: value, toValue: to, duration: duration, animation: {
             self._value = to
             self.layoutSubviews(forValue: to)
         }, completion: completion)
@@ -267,7 +345,7 @@ open class RoundedSlider: UIView, Slider
     // MARK: - Gestures
     
     @IBInspectable
-    var numberOfTapsRequiredToSlide: Int = 1 { didSet { tapGestureRecognizer.numberOfTapsRequired = numberOfTapsRequiredToSlide } }
+    open var numberOfTapsRequiredToSlide: Int = 1 { didSet { tapGestureRecognizer.numberOfTapsRequired = numberOfTapsRequiredToSlide } }
     
     func createTapRecognizer() -> UITapGestureRecognizer
     {
@@ -293,15 +371,52 @@ open class RoundedSlider: UIView, Slider
     {
         var location = gesture.location(in: self)
         
-        let f = trackFrame().insetBy(dx: thumbFrame().width / 2, dy: 0)
+        let ff = thumbInsets.apply(to: barInsets.apply(to: trackFrame()))
+        
+        let thumbSize = thumbFrame().size
+        
+        let f = ff.insetBy(dx: thumbSize.width / 2, dy: thumbSize.height / 2)
         
         location.x = min(f.maxX, max(f.minX, location.x))
+        location.y = min(f.maxY, max(f.minY, location.y))
         
-        let t = Float((location.x - f.minX) / f.width)
+        let t: Float
+
+        switch currentOrientation
+        {
+        case .automatic:
+            fallthrough
+            
+        case .leftToRight:
+            
+            t = Float((location.x - f.minX) / f.width)
+            
+        case .rightToLeft:
+            
+            t = Float((f.maxX - location.x) / f.width)
+            
+        case .bottomToTop:
+            
+            t = Float((f.maxY - location.y) / f.height)
+            
+        case .topToBottom:
+
+            t = Float((location.y - f.minY) / f.height)
+        }
         
         let v = lerp(minValue, maxValue, t)
         
         return v
+
+        
+//        let f = trackFrame().insetBy(dx: thumbFrame().width / 2, dy: 0)
+//        
+//        location.x = min(f.maxX, max(f.minX, location.x))
+//        
+//        let t = Float((location.x - f.minX) / f.width)
+//        
+//        let v = lerp(minValue, maxValue, t)
+        //                return v
     }
     
     func snap(gesture: UIGestureRecognizer)
@@ -313,7 +428,7 @@ open class RoundedSlider: UIView, Slider
             v = adjustedV
         }
         
-        animateSlide(to: v) { _ in
+        animateSlide(to: v, duration: SliderAnimator.DefaultSliderSnapAnimationDuration) { _ in
             self.delegate?.slider(self, didEndSlidingWithFinalValue: self.value)
         }
     }
@@ -342,7 +457,7 @@ open class RoundedSlider: UIView, Slider
             
             guard trackingPan else { return }
             
-            animateSlide(to: value(for: pan))
+            animateSlide(to: value(for: pan), duration: SliderAnimator.DefaultSliderTrackAnimationDuration)
             
         default:
             

@@ -9,10 +9,11 @@
 import UIKit
 import Slider
 
-class ViewController: UIViewController {
-
-    @IBOutlet weak var slider: RoundedSlider? {didSet { slider?.delegate = self } } //; slider?.barColor = .clear } }// UIColor(red: 220/255.0, green: 150/255.0, blue: 35/255.0, alpha: 1) } }
-
+class ViewController: UIViewController
+{
+    @IBOutlet weak var horizontalSlider: RoundedSlider? {didSet { horizontalSlider?.delegate = self } }
+    
+    @IBOutlet weak var verticalSlider: RoundedSlider? {didSet { verticalSlider?.orientation = .bottomToTop; verticalSlider?.delegate = self } }
 }
 
 
