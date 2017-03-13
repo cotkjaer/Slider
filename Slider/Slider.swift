@@ -10,7 +10,7 @@ import Foundation
 
 public protocol Slider
 {
-    var delegate : SliderDelegate? { set get }
+    var delegate: SliderDelegate? { set get }
     
     var minValue: Float { set get }
     
