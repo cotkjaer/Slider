@@ -4,10 +4,15 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Slider.xcscheme</key>
+		<key>Slider.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>SliderDemo.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -18,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>8F368BCE1E3B3099002D881C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8F56A9911E76E42000B1F37C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
