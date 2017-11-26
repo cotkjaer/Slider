@@ -433,7 +433,7 @@ open class RoundedSlider: UIView, Slider
         }
     }
     
-    func handleTap(_ tap: UITapGestureRecognizer)
+    @objc func handleTap(_ tap: UITapGestureRecognizer)
     {
         delegate?.slider(self, willBeginSlidingWithInitialValue: value)
         snap(gesture: tap)
@@ -441,7 +441,7 @@ open class RoundedSlider: UIView, Slider
     
     var trackingPan: Bool = false
     
-    func handlePan(_ pan: UIPanGestureRecognizer)
+    @objc func handlePan(_ pan: UIPanGestureRecognizer)
     {
         switch pan.state
         {
